@@ -1,11 +1,9 @@
 const express = require('express');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
+const tokenList = {};
 const router = express.Router();
-
-router.get('/', (request, response) => {
-    response.send('Hello world');
-});
 
 router.get('/status', (request, response) => {
     response.status(200).json({ message: 'Ok', status: 200 });
@@ -28,31 +26,67 @@ router.post('/login', async (request, response, next) => {
 
             request.login(user, { session: false }, (err) => {
                 if (err) return next(err);
-                return response.status(200).json({ user, status: 200 });
+
+                //create jwt
+                const body = {
+                    _id: user._id,
+                    email: user.email,
+                    name: user.username,
+                };
+
+                const token = jwt.sign({ user: body }, process.env.JWT_SECRET, { expiresIn: 300 });
+                const refreshToken = jwt.sign({ user: body }, process.env.JWT_REFRESH_SECRET, { expiresIn: 86400 });
+
+                //store token in cookies
+                response.cookie('jwt', token);
+                response.cookie('refreshJwt', refreshToken);
+
+                //store tokens in memory
+                tokenList[refreshToken] = {
+                    token,
+                    refreshToken,
+                    email: user.email,
+                    _id: user._id,
+                    name: user.username,
+                };
+
+                return response.status(200).json({ token, refreshToken, status: 200 });
             });
         } catch (err) {
-            console.log(err);
             return next(err);
         }
     })(request, response, next);
 });
 
 router.post('/logout', (request, response) => {
-    if (!request.body) {
-        response.status(400).json({ message: 'Invalid body', status: 400 });
+    if(request.cookies) {
+        const refreshToken = request.cookies.refreshJwt;
+        if(refreshToken in tokenList) delete tokenList[refreshToken];
+        response.clearCookie('jwt');
+        response.clearCookie('refreshJwt');
     }
-    else {
-        response.status(200).json({ message: 'Ok', status: 200 });
-    }
+    response.status(200).json({ message: 'Logged out', status: 200 });
 });
 
 router.post('/token', (request, response) => {
-    if (!request.body || !request.body.refreshToken) {
-        response.status(400).json({ message: 'Invalid body or refresh token', status: 400 });
+    const { refreshToken } = request.body;
+
+    if(refreshToken in tokenList) {
+        const body = {
+            _id: tokenList[refreshToken]._id,
+            email: tokenList[refreshToken].email,
+            name: tokenList[refreshToken].name,
+        };
+        const token = jwt.sign({ user: body }, process.env.JWT_SECRET, { expiresIn: 300 });
+
+        //update jwt
+        response.cookie('jwt', token);
+        tokenList[refreshToken].token = token;
+
+        response.status(200).json({ token, status: 200 });
     }
     else {
-        const { refreshToken } = request.body;
-        response.status(200).json({ message: `Refresh token requested for token: ${refreshToken}`, status: 200 });
+        response.status(401).json({ message: 'Unauthorized', status: 401 });
     }
 });
 
