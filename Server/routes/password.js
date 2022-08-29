@@ -55,7 +55,7 @@ router.post('/forgot-password', async (request, response) => {
         subject: 'Password Reset',
         context: {
             name: user.username,
-            url: `http://localhost:${process.env.PORT || 3000}?token=${token}`,
+            url: `http://localhost:${process.env.PORT || 3000}/reset-password.html?token=${token}`,
         },
     };
     await smtpTransport.sendMail(emailOptions);
