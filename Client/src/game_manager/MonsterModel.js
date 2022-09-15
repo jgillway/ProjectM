@@ -1,6 +1,9 @@
-class MonsterModel {
+import { v4 } from 'uuid';
+import { randomNumber } from './utils';
+
+export default class MonsterModel {
   constructor(x, y, gold, spawnerId, frame, health, attack) {
-    this.id = `${spawnerId}-${uuid.v4()}`;
+    this.id = `${spawnerId}-${v4()}`;
     this.spawnerId = spawnerId;
     this.x = x * 2;
     this.y = y * 2;

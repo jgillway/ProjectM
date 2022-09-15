@@ -1,11 +1,8 @@
-const Direction = {
-  RIGHT: 'RIGHT',
-  LEFT: 'LEFT',
-  UP: 'UP',
-  DOWN: 'DOWN',
-};
+import * as Phaser from 'phaser';
+import Player from './Player';
+import Direction from '../../utils/direction';
 
-class PlayerContainer extends Phaser.GameObjects.Container {
+export default class PlayerContainer extends Phaser.GameObjects.Container {
   constructor(scene, x, y, key, frame, health, maxHealth, id, attackAudio) {
     super(scene, x, y);
     this.scene = scene; // the scene this container will be added to

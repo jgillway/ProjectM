@@ -1,4 +1,8 @@
-class GameManager {
+import Spawner from './Spawner';
+import PlayerModel from './PlayerModel';
+import { SpawnerType } from './utils';
+
+export default class GameManager {
   constructor(scene, mapData) {
     this.scene = scene;
     this.mapData = mapData;
@@ -126,7 +130,7 @@ class GameManager {
           // check if players health is below or equal to 0 and if so respawn
           if (this.players[playerId].health <= 0) {
             // update the gold to half
-            this.players[playerId].updateGold(parseInt(-this.players[playerId].gold / 2), 10);
+            this.players[playerId].updateGold(parseInt(-this.players[playerId].gold / 2, 10));
             this.scene.events.emit('updateCoins', this.players[playerId].gold);
 
             // respawn player

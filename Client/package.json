@@ -23,6 +23,7 @@
     "webpack-dev-server": "~3"
   },
   "dependencies": {
-    "phaser": "^3.55.2"
+    "phaser": "^3.55.2",
+    "uuid": "^9.0.0"
   }
 }
