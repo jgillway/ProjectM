@@ -6,10 +6,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "nodemon": "npx nodemon index.js"
+    "nodemon": "npx nodemon index.js --exec babel-node"
   },
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/node": "7.10.1",
+    "@babel/preset-env": "^7.18.10",
+    "babel-loader": "^8.2.5",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "raw-loader": "^4.0.2",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^4.3.0",
+    "webpack-dev-server": "~3"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",

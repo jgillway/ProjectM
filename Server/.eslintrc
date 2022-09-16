@@ -6,6 +6,7 @@
     "rules": {
         "no-console": "off",
         "max-len": "off",
-        "brace-style": "off"
+        "brace-style": "off",
+        "no-unused-vars": "off"
     }
 }
