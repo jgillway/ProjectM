@@ -43,7 +43,7 @@ app.use(cors({ credentials: true, orgin: process.env.CORS_ORGIN }));
 // require passport auth
 require('./auth/auth');
 
-app.get('/game.html', passport.authenticate('jwt', { session: false }) ,(request, response) => {
+app.get('/game.html', passport.authenticate('jwt', { session: false }), (request, response) => {
   response.status(200).json(request.user);
 });
 
@@ -64,6 +64,7 @@ app.use((request, response) => {
 });
 
 // handle errors
+// eslint-disable-next-line no-unused-vars
 app.use((error, request, response, next) => {
   console.log(error);
   response.status(error.status || 500).json({ error: error.message, status: 500 });
